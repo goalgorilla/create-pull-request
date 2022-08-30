@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import {Inputs, createPullRequest} from './create-pull-request'
+import {readFileSync} from 'fs'
 import {inspect} from 'util'
 import * as utils from './utils'
 
@@ -19,7 +20,13 @@ async function run(): Promise<void> {
       base: core.getInput('base'),
       pushToFork: core.getInput('push-to-fork'),
       title: core.getInput('title'),
-      body: core.getInput('body'),
+      body:
+        core.getInput('body-file') !== ''
+          ? readFileSync(core.getInput('body-file'), {
+              encoding: 'utf8',
+              flag: 'r'
+            })
+          : core.getInput('body'),
       labels: utils.getInputAsArray('labels'),
       assignees: utils.getInputAsArray('assignees'),
       reviewers: utils.getInputAsArray('reviewers'),

@@ -1092,6 +1092,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const create_pull_request_1 = __nccwpck_require__(3780);
+const fs_1 = __nccwpck_require__(7147);
 const util_1 = __nccwpck_require__(3837);
 const utils = __importStar(__nccwpck_require__(918));
 function run() {
@@ -1111,7 +1112,12 @@ function run() {
                 base: core.getInput('base'),
                 pushToFork: core.getInput('push-to-fork'),
                 title: core.getInput('title'),
-                body: core.getInput('body'),
+                body: core.getInput('body-file') !== ''
+                    ? (0, fs_1.readFileSync)(core.getInput('body-file'), {
+                        encoding: 'utf8',
+                        flag: 'r'
+                    })
+                    : core.getInput('body'),
                 labels: utils.getInputAsArray('labels'),
                 assignees: utils.getInputAsArray('assignees'),
                 reviewers: utils.getInputAsArray('reviewers'),
